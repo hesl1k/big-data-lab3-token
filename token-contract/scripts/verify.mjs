@@ -1,0 +1,5 @@
+import {readFileSync,writeFileSync} from 'node:fs';
+const [address,creationTransactionHash]=process.argv.slice(2);if(!/^0x[a-fA-F0-9]{40}$/.test(address??''))throw Error('Usage: node scripts/verify.mjs ADDRESS [CREATION_TX]');
+const stdJsonInput=JSON.parse(readFileSync(new URL('../../verification/standard-input.json',import.meta.url)));const source=Object.keys(stdJsonInput.sources).find(n=>n.endsWith('/Token.sol'));
+const response=await fetch(`https://sourcify.dev/server/v2/verify/11155111/${address}`,{method:'POST',headers:{'Content-Type':'application/json','User-Agent':'TokenLab3Verification/1.0'},body:JSON.stringify({stdJsonInput,compilerVersion:'0.8.30+commit.73712a01',contractIdentifier:source+':Token',...(creationTransactionHash?{creationTransactionHash}:{})})});
+const ticket=await response.json();console.log(JSON.stringify(ticket,null,2));if(!response.ok)throw Error('Verification submission failed');writeFileSync(new URL('../../verification/sourcify-ticket.json',import.meta.url),JSON.stringify(ticket,null,2));

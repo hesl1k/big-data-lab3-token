@@ -1,0 +1,1 @@
+import type {Metadata} from 'next';import './style.css';export const metadata:Metadata={title:'ERC-20',description:'Управление токеном ERC-20'};export default function Layout({children}:Readonly<{children:React.ReactNode}>){return <html lang="ru"><body>{children}</body></html>;}

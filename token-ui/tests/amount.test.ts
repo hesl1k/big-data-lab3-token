@@ -1,0 +1,6 @@
+import {test} from 'node:test';import assert from 'node:assert/strict';import {toUnits,fromUnits} from '../lib/amount.ts';import {request} from '../lib/wallet.ts';
+test('18 decimals and one smallest unit are exact',()=>{assert.equal(toUnits('0.000000000000000001',18),1n);assert.equal(toUnits('1.25',18),1250000000000000000n);assert.equal(fromUnits(1250000000000000000n,18),'1.25');});
+test('large balances never pass through floating point',()=>{const s='12345678901234567890.123456789012345678';assert.equal(fromUnits(toUnits(s,18),18),s);});
+test('supports decimal comma and zero decimals',()=>{assert.equal(toUnits('1,25',2),125n);assert.equal(toUnits('12',0),12n);assert.equal(fromUnits(12n,0),'12');assert.equal(fromUnits(0n,18),'0');});
+test('rejects invalid, negative, zero, excess precision and overflow',()=>{for(const s of ['0','-1','NaN','1e18','1.2.3',''])assert.throws(()=>toUnits(s,18));assert.throws(()=>toUnits('0.001',2));assert.throws(()=>toUnits((2n**256n).toString(),0));});
+test('wallet pending and timed out requests become actionable errors',async()=>{await assert.rejects(request({request:async()=>{throw {code:-32002};}},{method:'eth_requestAccounts'}),/ожидающий запрос/);await assert.rejects(request({request:()=>new Promise(()=>{})},{method:'eth_requestAccounts'},10),/не ответил/);});

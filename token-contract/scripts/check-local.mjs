@@ -1,0 +1,10 @@
+import {createPublicClient,createWalletClient,http} from 'viem';import {hardhat} from 'viem/chains';import {readFileSync,writeFileSync,mkdirSync} from 'node:fs';
+const abi=JSON.parse(readFileSync(new URL('../artifacts/contracts/Token.sol/Token.json',import.meta.url))).abi;
+const address=JSON.parse(readFileSync(new URL('../ignition/deployments/chain-31337/deployed_addresses.json',import.meta.url)))['TokenModule#Token'];
+const c=createPublicClient({chain:hardhat,transport:http('http://127.0.0.1:8545')});const w=createWalletClient({chain:hardhat,transport:http('http://127.0.0.1:8545')});const [owner,other]=await w.getAddresses();
+const transfer=await w.writeContract({address,abi,functionName:'transfer',args:[other,1250000000000000000n],account:owner});await c.waitForTransactionReceipt({hash:transfer});
+const mint=await w.writeContract({address,abi,functionName:'mint',args:[other,10n*10n**18n],account:owner});await c.waitForTransactionReceipt({hash:mint});
+const balance=await c.readContract({address,abi,functionName:'balanceOf',args:[other]});if(balance!==11250000000000000000n)throw Error('Unexpected recipient balance');
+const evidence=new URL('../../evidence/',import.meta.url);mkdirSync(evidence,{recursive:true});
+writeFileSync(new URL('local-check.json',evidence),JSON.stringify({address,owner,recipient:other,transfer,mint,recipientBalance:String(balance),totalSupply:String(await c.readContract({address,abi,functionName:'totalSupply'}))},null,2));
+writeFileSync(new URL('../../token-ui/public/deployment.local.json',import.meta.url),JSON.stringify({address,block:'1',chain:'31337'},null,2));console.log('Local transfer 1.25 STDY and mint 10 STDY confirmed. Recipient: 11.25 STDY.');

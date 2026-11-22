@@ -1,0 +1,9 @@
+**/node_modules/
+**/.next/
+**/cache/
+**/artifacts/
+**/tsconfig.tsbuildinfo
+**/.env*
+!**/.env.example
+token-contract/ignition/deployments/
+*.log
