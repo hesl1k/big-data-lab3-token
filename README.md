@@ -37,6 +37,19 @@ Study Token (STDY), 18 знаков после запятой, начальны�
 
 Локальная интеграционная проверка: переведено 1,25 STDY второму аккаунту и выпущено ещё 10 STDY на него. Баланс получателя 11,25 STDY, totalSupply 10 010 STDY. Результат сохранён в evidence/local-check.json.
 
-Публичные ссылки на контракт, транзакции и протокол добавляются после завершения проверки в Sepolia. Репозиторий: https://github.com/hesl1k/big-data-lab3-token
+## Sepolia
+
+Контракт: `0x586da3bd74eE85533FcfcEBad3EDe343dE916e41`, блок создания `12191351`, Chain ID `11155111`. Адрес автоматически загружается из deployment.sepolia.json.
+
+- Проверенный исходный код: https://eth-sepolia.blockscout.com/address/0x586da3bd74eE85533FcfcEBad3EDe343dE916e41?tab=contract
+- Создание: https://eth-sepolia.blockscout.com/tx/0xd62637b51c1492ff87b537e5cd78fe36e8cfe580cb530245f132f8270169ab82
+- Перевод 1,25 STDY: https://eth-sepolia.blockscout.com/tx/0x803e5692ec9ffdf6fa09b5b6720a97d23a3504aa3de27676cc0e58d6f4262508
+- Выпуск 10 STDY: https://eth-sepolia.blockscout.com/tx/0x3f8b9d0d2411eaf007c789d7e177652afa197fa7c0368d72ef98c5c13b1dca41
+
+Итог: totalSupply = 10010 STDY; баланс владельца = 10008,75 STDY; баланс тестового получателя = 1,25 STDY. Владелец — `0x0D1fB0277bD5581EC4365120AaB5C9b4B34fc49a`. Токен добавлен пользователем в MetaMask. Исходный код прошёл exact-match верификацию Sourcify и Blockscout. Автоматическая передача в Etherscan ограничена дневным лимитом сервиса; проверенный исходный код доступен по ссылке Blockscout.
+
+Повторная проверка публичных данных: `node scripts/inspect-sepolia.mjs` в token-contract. Повторная отправка исходников на проверку: `node scripts/verify.mjs ADDRESS CREATION_TX`. Для проверки Etherscan через Hardhat можно задать ETHERSCAN_API_KEY и выполнить `npx hardhat verify --network sepolia ADDRESS "Study Token" "STDY" "10000000000000000000000"`.
+
+Репозиторий: https://github.com/hesl1k/big-data-lab3-token
 
 Ответы на контрольные вопросы в протокол не включаются.
